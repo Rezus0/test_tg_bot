@@ -3,7 +3,7 @@ import telebot
 from telebot import types
 
 
-bot = telebot.TeleBot("#ваш_токен")  # создание бота
+bot = telebot.TeleBot("##############")  # создание бота
 
 
 @bot.message_handler(commands=['start'])  # обработка команды /start
@@ -36,8 +36,14 @@ def documents(message):
 @bot.message_handler(commands=['account'])  # обработка команды /account
 def account(message):
     if name != "" and surname != "" and surname != "" and age != 0:
-        bot.send_message(message.from_user.id, surname + " " + name + " " + middlename + ".\n" + str(
-            age) + " лет.")
+        if age % 10 == 1 and age % 100 != 11:
+            bot.send_message(message.from_user.id, surname + " " + name + " " + middlename + ".\n" + str(age) + " год.")
+        elif (age % 10 == 2 or age % 10 == 3 or age % 10 == 4) and age % 100 != 12 and age % 100 != 13 and age % 100 \
+                != 14:
+            bot.send_message(message.from_user.id,
+                             surname + " " + name + " " + middlename + ".\n" + str(age) + " года.")
+        else:
+            bot.send_message(message.from_user.id, surname + " " + name + " " + middlename + ".\n" + str(age) + " лет.")
     else:
         bot.send_message(message.from_user.id, "Вы не зарегистрированы! Используйте /reg")
 
@@ -104,29 +110,45 @@ sadstickers = ["CAACAgQAAxkBAAEDP2RhitB0LRhD5hQpXRIGgxp_gs3fxAACJBAAAswdmwzFk26z
 def get_name(message):  # получение имени
     global name
     name = message.text
-    bot.send_message(message.from_user.id, "Ваша фамилия:")
-    bot.register_next_step_handler(message, get_surname)
+    if name.isnumeric():
+        bot.send_message(message.from_user.id, "Введите данные корректно, пожалуйста.")
+        bot.register_next_step_handler(message, get_name)
+    else:
+        bot.send_message(message.from_user.id, "Ваша фамилия:")
+        bot.register_next_step_handler(message, get_surname)
 
 
 def get_surname(message):  # получение фамилии
     global surname
     surname = message.text
-    bot.send_message(message.from_user.id, "Ваше отчество:")
-    bot.register_next_step_handler(message, get_middlename)
+    if surname.isnumeric():
+        bot.send_message(message.from_user.id, "Введите данные корректно, пожалуйста.")
+        bot.register_next_step_handler(message, get_surname)
+    else:
+        bot.send_message(message.from_user.id, "Ваше отчество:")
+        bot.register_next_step_handler(message, get_middlename)
 
 
 def get_middlename(message):  # получение отчества
     global middlename
     middlename = message.text
-    bot.send_message(message.from_user.id, "Ваш возраст: ")
-    bot.register_next_step_handler(message, get_age)
+    if middlename.isnumeric():
+        bot.send_message(message.from_user.id, "Введите данные корректно, пожалуйста.")
+        bot.register_next_step_handler(message, get_middlename)
+    else:
+        bot.send_message(message.from_user.id, "Ваш возраст:")
+        bot.register_next_step_handler(message, get_age)
 
 
 def get_age(message):  # получение возраста до тех пор, пока не будет введен цифрами
     global age
     try:
-        age = int(message.text)
-        check_information(message)
+        if 0 < int(message.text) < 200:
+            age = int(message.text)
+            check_information(message)
+        else:
+            bot.send_message(message.from_user.id, "Введите корректный возраст, пожалуйста.")
+            bot.register_next_step_handler(message, get_age)
     except Exception:
         bot.send_message(message.from_user.id, "Цифрами, пожалуйста.")
         bot.register_next_step_handler(message, get_age)
@@ -138,8 +160,15 @@ def check_information(message):  # создание кнопок на клави
     item_no = types.KeyboardButton("Нет")
     markup.add(item_yes)
     markup.add(item_no)
-    bot.send_message(message.from_user.id, surname + " " + name + " " + middlename + ".\n" + str(
-        age) + " лет." + "\n\n" + "Информация корректна?", reply_markup=markup)
+    if age % 10 == 1 and age % 100 != 11:
+        bot.send_message(message.from_user.id, surname + " " + name + " " + middlename + ".\n" + str(
+            age) + " год." + "\n\n" + "Информация корректна?", reply_markup=markup)
+    elif (age % 10 == 2 or age % 10 == 3 or age % 10 == 4) and age % 100 != 12 and age % 100 != 13 and age % 100 != 14:
+        bot.send_message(message.from_user.id, surname + " " + name + " " + middlename + ".\n" + str(
+            age) + " года." + "\n\n" + "Информация корректна?", reply_markup=markup)
+    else:
+        bot.send_message(message.from_user.id, surname + " " + name + " " + middlename + ".\n" + str(
+            age) + " лет." + "\n\n" + "Информация корректна?", reply_markup=markup)
     bot.register_next_step_handler(message, check_reaction)
 
 
