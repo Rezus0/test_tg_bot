@@ -1,7 +1,7 @@
 import random
-
 import telebot
 from telebot import types
+
 
 bot = telebot.TeleBot("#ваш_токен")  # создание бота
 
@@ -43,7 +43,7 @@ def account(message):
 
 
 @bot.message_handler(commands=['sticker'])  # создание callback-кнопок
-def registration(message):
+def sticker_sender(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
     keyboard.row(
         telebot.types.InlineKeyboardButton("Веселые😀", callback_data="funny")
