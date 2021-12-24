@@ -54,6 +54,28 @@ def account(message):
         bot.send_message(message.from_user.id, "Вы не зарегистрированы! Используйте /reg")
 
 
+@bot.message_handler(commands=["contest"])
+def points(message):
+    markup = types.InlineKeyboardMarkup()
+    contest_button2021 = types.InlineKeyboardButton(text="Конкурс 2021",
+                                            url="https://rut-miit.ru/admissions/degrees?year=2021&city=1&level=4"
+                                                "&training=20773")
+    contest_button2022 = types.InlineKeyboardButton(text="Конкурс 2022",
+                                                url="https://rut-miit.ru/admissions/degrees?year=2022&city=1&level=4"
+                                                    "&training=20773")
+    markup.add(contest_button2021)
+    markup.add(contest_button2022)
+    bot.send_message(message.chat.id,
+                     "Практика последних лет показывает, что подавляющее большинство абитуриентов с высокими баллами, "
+                     "рекомендованных к зачислению в первую волну, *необходимые оригиналы документов так и не *"
+                     "*предоставляет*, поскольку по закону документы можно подать в 5 вузов по три специальности / "
+                     "направления в каждом. Ориентироваться следует на количество бюджетных мест и число поданных "
+                     "оригиналов. Если количество свободных мест 50, а по оригиналам Вы, скажем, на 25-м месте в "
+                     "общем списке, то отчаиваться не стоит: шансы на поступление достаточно высоки.",
+                     parse_mode="markdown",
+                     reply_markup=markup)
+
+
 @bot.message_handler(commands=["sticker"])  # создание callback-кнопок
 def sticker_sender(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
@@ -87,6 +109,54 @@ def achievements_command(message):
                      "быть начислено за индивидуальные достижения *не более 10 баллов суммарно.*",
                      parse_mode="markdown",
                      reply_markup=markup)
+
+
+@bot.message_handler(commands=["advantages"])  # обработка команды /advantages
+def advantages(message):
+    text = "Российский университет транспорта включает в себя множество разнообразных специальностей, " \
+           "помогает студенту трудоустроиться после выпуска,сотрудничает с множеством организаций."
+    keyboard = types.InlineKeyboardMarkup()
+    button1 = types.InlineKeyboardButton(text="Информация о преимуществах обучения в ИУЦТ",
+                                         url="https://imiit.ru/abiturienty")
+    keyboard.add(button1)
+    bot.send_message(message.from_user.id, text=text, parse_mode="html", reply_markup=keyboard)
+
+
+@bot.message_handler(commands=["vk"])  # обработка команды /vk
+def vk(message):
+    text = "Группы университета ВКонтакте:"
+    keyboard = types.InlineKeyboardMarkup()
+    button1 = types.InlineKeyboardButton(text="РУТ(МИИТ):",
+                                         url="https://vk.com/rutmiitvk")
+    keyboard.add(button1)
+    button2 = types.InlineKeyboardButton(text="ИУЦТ:",
+                                         url="https://vk.com/imdtrut")
+    keyboard.add(button2)
+    button3 = types.InlineKeyboardButton(text="Деканат ИУЦТ:",
+                                         url="https://vk.com/imdt2021")
+    keyboard.add(button3)
+    bot.send_message(message.from_user.id, text=text, parse_mode="html", reply_markup=keyboard)
+
+
+@bot.message_handler(commands=["clinic"])  # обработка команды /clinic
+def clinic(message):
+    text = "Информация о поликлинике РУТ(МИИТ):"
+    keyboard = types.InlineKeyboardMarkup()
+    button1 = types.InlineKeyboardButton(text="Ссылка:",
+                                         url="https://rut-miit.ru/depts/25004")
+    keyboard.add(button1)
+    bot.send_message(message.from_user.id, text=text, parse_mode="html", reply_markup=keyboard)
+
+
+@bot.message_handler(commands=["grants"])  # обработка команды /grants
+def grants(message):
+    text = "Университет выплачивает ежемесячную стипендию обучающимся на бюджете при отсутствии троек за сессию." \
+           "Также профсоюзная организация РУТ(МИИТ) и деканат выплачивают материальную помощь нуждающимся."
+    keyboard = types.InlineKeyboardMarkup()
+    button1 = types.InlineKeyboardButton(text="Дополнительная информация о выплатах установленных университетом:",
+                                         url="https://rut-miit.ru/sveden/grants")
+    keyboard.add(button1)
+    bot.send_message(message.from_user.id, text=text, parse_mode="html", reply_markup=keyboard)
 
 
 @bot.message_handler(commands=["video"])
